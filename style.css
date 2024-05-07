@@ -1,0 +1,23 @@
+#RPS{  color: white;
+    background-color: black;
+}
+#RPS.div{
+ display:flex;
+ color: yellow;
+}
+#Play{
+    border: 3px solid;
+    border-radius: 7px;
+    box-shadow: green 0 0 10px
+
+}
+#Playagain{
+    @font-face {
+        font-family: ;
+        src: url();
+    } 
+    border: 3px solid;
+    border-radius: 7px;
+    box-shadow: green 0 0 10px
+    
+}
