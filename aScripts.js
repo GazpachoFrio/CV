@@ -2,11 +2,12 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // Definir variables del juego
-let shipX = canvas.width / 2;
-let shipY = canvas.height / 2;
 let shipSize = 20;
 let asteroids = [];
 let score = 0;
+let mouseX = canvas.width / 2;
+let mouseY = canvas.height / 2;
+let shipSpeed = 5;
 
 // Crear nave
 function drawShip() {
@@ -42,18 +43,43 @@ function drawAsteroids() {
 
 // Mover nave
 function moveShip(event) {
-    const speed = 5;
-    if (event.key === "ArrowUp" && shipY > 0) {
-        shipY -= speed;
-    } else if (event.key === "ArrowDown" && shipY < canvas.height) {
-        shipY += speed;
-    } else if (event.key === "ArrowLeft" && shipX > 0) {
-        shipX -= speed;
-    } else if (event.key === "ArrowRight" && shipX < canvas.width) {
-        shipX += speed;
-    }
+    mouseX = event.clientX - canvas.getBoundingClientRect().left;
+    mouseY = event.clientY - canvas.getBoundingClientRect().top;
+}
+// Draw bullets
+function drawBullets() {
+    bullets.forEach(bullet => {
+        ctx.beginPath();
+        ctx.fillStyle = "#f00";
+        ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+// Fire bullets on click
+function fireBullet() {
+    bullets.push({ x: mouseX, y: mouseY });
 }
 
+// Move bullets
+function moveBullets() {
+    bullets.forEach(bullet => {
+        bullet.y -= bulletSpeed;
+    });
+}
+
+// Collision detection between bullets and asteroids
+function checkBulletAsteroidCollision() {
+    bullets.forEach(bullet => {
+        asteroids.forEach((asteroid, asteroidIndex) => {
+            const distance = Math.sqrt((bullet.x - asteroid.x)**2 + (bullet.y - asteroid.y)**2);
+            if (distance < asteroid.radius) {
+                bullets.splice(bullets.indexOf(bullet), 1);
+                asteroids.splice(asteroidIndex, 1);
+                score += 10;
+            }
+        });
+    });
+}
 // Colisión entre nave y asteroides
 function checkCollision() {
     asteroids.forEach(asteroid => {
